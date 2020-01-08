@@ -1,4 +1,4 @@
-package com.recipes.RecipesManager.config;
+package com.upcarrot.UpCarrot.config;
 
 import com.mongodb.MongoClient;
 import org.springframework.context.annotation.Configuration;
