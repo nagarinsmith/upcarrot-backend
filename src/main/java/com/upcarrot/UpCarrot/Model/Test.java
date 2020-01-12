@@ -1,4 +1,4 @@
-package com.upcarrot.UpCarrot.model;
+package com.upcarrot.UpCarrot.Model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

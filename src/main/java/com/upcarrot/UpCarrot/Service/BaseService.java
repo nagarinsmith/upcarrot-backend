@@ -1,7 +1,7 @@
 package com.upcarrot.UpCarrot.Service;
 
 import com.upcarrot.UpCarrot.Repository.BaseRepository;
-import com.upcarrot.UpCarrot.model.BaseEntity;
+import com.upcarrot.UpCarrot.Model.BaseEntity;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;

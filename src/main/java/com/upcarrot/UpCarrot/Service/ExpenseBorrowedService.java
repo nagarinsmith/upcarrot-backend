@@ -1,26 +1,24 @@
 package com.upcarrot.UpCarrot.Service;
 
+import com.upcarrot.UpCarrot.Model.ExpenseBorrowed;
 import com.upcarrot.UpCarrot.Repository.BaseRepository;
-import com.upcarrot.UpCarrot.Repository.TestRepository;
-import com.upcarrot.UpCarrot.Model.Test;
+import com.upcarrot.UpCarrot.Repository.ExpenseBorrowedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TestService extends BaseService {
+public class ExpenseBorrowedService extends BaseService {
 
     @Autowired
-    private TestRepository testRepository;
-
-
+    private ExpenseBorrowedRepository repository;
 
     @Override
     public BaseRepository getRepository() {
-        return testRepository;
+        return repository;
     }
 
     @Override
     public Class<?> getBaseDtoClass() {
-        return Test.class;
+        return ExpenseBorrowed.class;
     }
 }
