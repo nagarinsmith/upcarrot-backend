@@ -1,7 +1,7 @@
 package com.upcarrot.UpCarrot.Controller;
 
 import com.upcarrot.UpCarrot.Service.BaseService;
-import com.upcarrot.UpCarrot.model.BaseEntity;
+import com.upcarrot.UpCarrot.Model.BaseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;

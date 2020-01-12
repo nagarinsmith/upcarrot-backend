@@ -1,26 +1,24 @@
 package com.upcarrot.UpCarrot.Service;
 
+import com.upcarrot.UpCarrot.Model.Event;
 import com.upcarrot.UpCarrot.Repository.BaseRepository;
-import com.upcarrot.UpCarrot.Repository.TestRepository;
-import com.upcarrot.UpCarrot.model.Test;
+import com.upcarrot.UpCarrot.Repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TestService extends BaseService {
+public class EventService extends BaseService {
 
     @Autowired
-    private TestRepository testRepository;
-
-
+    private EventRepository repository;
 
     @Override
     public BaseRepository getRepository() {
-        return testRepository;
+        return repository;
     }
 
     @Override
     public Class<?> getBaseDtoClass() {
-        return Test.class;
+        return Event.class;
     }
 }
