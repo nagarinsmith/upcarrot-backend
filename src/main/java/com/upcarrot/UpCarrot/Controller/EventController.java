@@ -1,23 +1,21 @@
 package com.upcarrot.UpCarrot.Controller;
 
-
-
+import com.upcarrot.UpCarrot.Model.Event;
 import com.upcarrot.UpCarrot.Service.BaseService;
-import com.upcarrot.UpCarrot.Service.TestService;
-import com.upcarrot.UpCarrot.model.Test;
+import com.upcarrot.UpCarrot.Service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/test")
-public class TestController extends BaseController<Test> {
+@RequestMapping("/event")
+public class EventController extends BaseController<Event> {
 
     @Autowired
-    private TestService testService;
+    private EventService eventService;
 
     @Override
-    public BaseService<Test> getService() {
-        return testService;
+    public BaseService<Event> getService() {
+        return eventService;
     }
 }

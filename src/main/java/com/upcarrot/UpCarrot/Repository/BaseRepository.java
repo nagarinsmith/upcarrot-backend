@@ -1,6 +1,6 @@
 package com.upcarrot.UpCarrot.Repository;
 
-import com.upcarrot.UpCarrot.model.BaseEntity;
+import com.upcarrot.UpCarrot.Model.BaseEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
