@@ -1,5 +1,7 @@
 package com.upcarrot.UpCarrot.filter;
 
+import com.upcarrot.UpCarrot.Service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -24,6 +26,9 @@ import static com.upcarrot.UpCarrot.filter.SecurityConstants.SIGN_UP_URL;
 public class WebSecurity extends WebSecurityConfigurerAdapter {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private UserService userService;
+
     public WebSecurity(BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
@@ -42,12 +47,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(new UserDetailsService() {
-            @Override
-            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                //TODO: ADD USER FIND
-                return new User(username,bCryptPasswordEncoder.encode("pass"),new ArrayList<>());
-            }
+        auth.userDetailsService(username -> {
+            com.upcarrot.UpCarrot.Model.User user = userService.getUserByEmail(username);
+            return new User(user.getEmail(),user.getPassword(),new ArrayList<>());
         }).passwordEncoder(bCryptPasswordEncoder);
     }
 
