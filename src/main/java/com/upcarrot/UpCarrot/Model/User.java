@@ -1,5 +1,6 @@
 package com.upcarrot.UpCarrot.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,6 +15,7 @@ public class User extends BaseEntity {
     private String email;
 
     @Field
+    @JsonIgnore
     private String password;
 
     public User(String email, String password) {
