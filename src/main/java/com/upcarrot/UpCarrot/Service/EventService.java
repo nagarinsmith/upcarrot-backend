@@ -27,6 +27,6 @@ public class EventService extends BaseService<Event> {
     }
 
     public List<Event> getByUser(User user){
-        return repository.findAll().stream().filter(event-> event.getListOfUsers().contains(user)).collect(Collectors.toList());
+        return repository.findAll().stream().filter(event-> event.getListOfUsers().stream().anyMatch(usr->usr.getId().equals(user.getId()))).collect(Collectors.toList());
     }
 }
