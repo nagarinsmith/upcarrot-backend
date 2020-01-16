@@ -67,7 +67,7 @@ public class EventController {
 
         eventService.create(new Event(users,new ArrayList<>(),dto.getName(),date1,status1));
 
-        return new ResponseEntity("",HttpStatus.OK);
+        return new ResponseEntity<>("",HttpStatus.OK);
     }
 
     @PutMapping("/add_expense/{id}")
@@ -82,7 +82,18 @@ public class EventController {
         Event event = eventService.getById(id);
         event.getListOfExpenses().add(expenseBorrowed);
         eventService.update(event);
-        return new ResponseEntity("",HttpStatus.OK);
+        expenseBorrowedService.delete(expenseBorrowed.getId());
+        return new ResponseEntity<>("",HttpStatus.OK);
     }
-
+    @DeleteMapping("/{eventId}/expense/{expenseId}")
+    public ResponseEntity deleteExpenseFromEvent(
+            @PathVariable String eventId,
+            @PathVariable String expenseId
+    ){
+        Event event = eventService.getById(eventId);
+//        event.getListOfExpenses().removeIf(e->e.getId()==null);
+        event.getListOfExpenses().removeIf(expense->expense.getId().equals(expenseId));
+        eventService.update(event);
+        return new ResponseEntity<>("",HttpStatus.OK);
+    }
 }

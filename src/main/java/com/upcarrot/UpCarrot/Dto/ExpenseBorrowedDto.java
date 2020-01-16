@@ -2,6 +2,7 @@ package com.upcarrot.UpCarrot.Dto;
 
 import com.mongodb.lang.Nullable;
 import com.upcarrot.UpCarrot.Model.BaseEntity;
+import com.upcarrot.UpCarrot.Model.ExpenseBorrowed;
 import com.upcarrot.UpCarrot.Model.ExpenseCategory;
 import com.upcarrot.UpCarrot.Model.Status;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ExpenseBorrowedDto extends BaseEntity {
@@ -32,6 +34,17 @@ public class ExpenseBorrowedDto extends BaseEntity {
     }
 
     public ExpenseBorrowedDto() {
+    }
+    public ExpenseBorrowedDto(ExpenseBorrowed expense){
+        this.setId(expense.getId());
+        this.user=expense.getUser();
+        this.description=expense.getDescription();
+        this.total=expense.getTotal();
+        this.category= expense.getCategory();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        this.date=formatter.format(expense.getDate());
+        this.otherParticipant=expense.getOtherParticipant();
+        this.status = expense.getStatus();
     }
 
     public String getUser() {
