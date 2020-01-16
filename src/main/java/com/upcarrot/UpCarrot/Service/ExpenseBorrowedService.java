@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,16 +44,11 @@ public class ExpenseBorrowedService extends BaseService {
                         .equals(user)).collect(Collectors.toList());
     }
 
-    public void addExpense(String user, @Nullable String description, Double total, ExpenseCategory category, String date, @Nullable String otherParticipant, Status status)
+    public ExpenseBorrowed addExpense(String user, @Nullable String description, Double total, ExpenseCategory category, String date, @Nullable String otherParticipant, Status status)
     {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        try {
-
-            Date gDate = formatter.parse(date);
-            repository.insert(new ExpenseBorrowed(user, description, total, category, gDate, otherParticipant, status));
-        }catch (Exception ex) {
-
-        }
+        Date gDate = Date.from(Instant.parse(date));
+        return repository.insert(
+                new ExpenseBorrowed(user, description, total, category, gDate, otherParticipant, status));
     }
 
     public void addBorrowed(String user, @Nullable String description, Double total, ExpenseCategory category, String date, @Nullable String otherParticipant, Status status) {
