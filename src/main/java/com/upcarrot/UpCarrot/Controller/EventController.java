@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
 import java.security.Principal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -95,5 +97,30 @@ public class EventController {
         event.getListOfExpenses().removeIf(expense->expense.getId().equals(expenseId));
         eventService.update(event);
         return new ResponseEntity<>("",HttpStatus.OK);
+    }
+
+    @PutMapping("/close/{id}")
+    public ResponseEntity closeEvent(@PathVariable String id)
+    {
+        Event event = eventService.getById(id);
+        var users = event.getListOfUsers();
+        var listOfExpenses = event.getListOfExpenses();
+        var numberOfUsers = users.size();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        Date date = new Date(Instant.now().toEpochMilli());
+        var currentDate = dateFormat.format(date);
+        for (ExpenseBorrowed exp: listOfExpenses
+        ) {
+            var total = exp.getTotal();
+            var perUser = total / numberOfUsers;
+            var userExp = exp.getUser();
+            for (User user: users
+            ) {
+                expenseBorrowedService.addBorrowed(userExp, "", perUser, null, currentDate, user.getEmail(), null);
+            }
+        }
+        event.setStatus(Status.closed);
+        eventService.update(event);
+        return new ResponseEntity<>("", HttpStatus.OK);
     }
 }

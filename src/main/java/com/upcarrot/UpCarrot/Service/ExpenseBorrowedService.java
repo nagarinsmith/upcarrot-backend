@@ -52,7 +52,7 @@ public class ExpenseBorrowedService extends BaseService {
     }
 
     public void addBorrowed(String user, @Nullable String description, Double total, ExpenseCategory category, String date, @Nullable String otherParticipant, Status status) {
-        addExpense(user, description, total, category, date, otherParticipant, status);
+        addExpense(user, description, total, ExpenseCategory.BORROWED, date, otherParticipant, Status.open);
         addExpense(otherParticipant, description, total, ExpenseCategory.OWED, date, user, Status.open);
     }
 
@@ -66,4 +66,5 @@ public class ExpenseBorrowedService extends BaseService {
         repository.save(expenseBorrowed);
         repository.save(expenseBorrowed1);
     }
+
 }
