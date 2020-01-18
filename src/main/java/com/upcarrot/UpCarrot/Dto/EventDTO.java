@@ -19,34 +19,28 @@ public class EventDTO {
     String name;
     String date;
     String status;
-
+    String id;
 
     public EventDTO() {
     }
 
-    public EventDTO(List<String> listOfUsers, List<ExpenseBorrowed> listOfExpenses, String name, String date, String status) {
+    public EventDTO(List<String> listOfUsers, List<ExpenseBorrowed> listOfExpenses, String name, String date, String status, String id) {
         this.listOfUsers = listOfUsers;
         this.listOfExpenses = listOfExpenses;
         this.name = name;
         this.date = date;
         this.status = status;
+        this.id = id;
     }
 
-    public EventDTO(List<String> listOfUsers, String name, String date, String status) {
-        this.listOfUsers = listOfUsers;
-        this.listOfExpenses = new ArrayList<>();
-        this.name = name;
-        this.date = date;
-        this.status = status;
-    }
-
-    public EventDTO(Event event){
+    public EventDTO(Event event) {
+        this.id = event.getId();
         this.listOfUsers = event.getListOfUsers().stream().map(User::getEmail).collect(Collectors.toList());
-        this.listOfExpenses=event.getListOfExpenses();
-        this.name=event.getName();
+        this.listOfExpenses = event.getListOfExpenses();
+        this.name = event.getName();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        this.date=formatter.format(event.getDate());
-        this.status=event.getStatus().name().toUpperCase();
+        this.date = formatter.format(event.getDate());
+        this.status = event.getStatus().name().toUpperCase();
     }
 
     public List<String> getListOfUsers() {

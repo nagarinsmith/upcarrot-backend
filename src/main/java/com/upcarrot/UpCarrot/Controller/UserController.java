@@ -18,9 +18,8 @@ public class UserController {
     public ResponseEntity register(
             @RequestParam String email,
             @RequestParam String password
-    )
-    {
-        userService.register(email,password);
+    ) {
+        userService.register(email, password);
         return new ResponseEntity<>("Welcome!", HttpStatus.OK);
     }
 }

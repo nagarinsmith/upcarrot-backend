@@ -6,7 +6,6 @@ import com.upcarrot.UpCarrot.Model.Event;
 import com.upcarrot.UpCarrot.Model.ExpenseBorrowed;
 import com.upcarrot.UpCarrot.Model.Status;
 import com.upcarrot.UpCarrot.Model.User;
-import com.upcarrot.UpCarrot.Service.BaseService;
 import com.upcarrot.UpCarrot.Service.EventService;
 import com.upcarrot.UpCarrot.Service.ExpenseBorrowedService;
 import com.upcarrot.UpCarrot.Service.UserService;
@@ -16,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.security.Principal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -48,8 +46,7 @@ public class EventController {
      */
 
     @GetMapping
-    public ResponseEntity getAllUserEvents(Principal principal)
-    {
+    public ResponseEntity getAllUserEvents(Principal principal) {
         var user = userService.getUserByEmail(principal.getName());
 
         return new ResponseEntity<>(eventService.getByUser(user).stream().map(EventDTO::new).collect(Collectors.toList()), HttpStatus.OK);
@@ -59,24 +56,27 @@ public class EventController {
     @PostMapping
     public ResponseEntity createNewEvent(
             @RequestBody EventDTO dto
-            ){
+    ) {
+        var user = SecurityContextHolder.getContext().getAuthentication().getName();
 
         List<User> users = dto.getListOfUsers()
                 .stream()
                 .map(userString -> userService.getUserByEmail(userString)).filter(Objects::nonNull).collect(Collectors.toList());
         Date date1 = Date.from(Instant.parse(dto.getDate()));
-        Status status1 = dto.getStatus().equals("OPEN")?Status.open:dto.getStatus().equals("PENDING")?Status.pending:Status.closed;
+        Status status1 = dto.getStatus().equals("OPEN") ? Status.OPEN : dto.getStatus().equals("PENDING") ? Status.PENDING : Status.CLOSED;
+        var userN = userService.getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
-        eventService.create(new Event(users,new ArrayList<>(),dto.getName(),date1,status1));
+        users.add(userN);
+        eventService.create(new Event(users, new ArrayList<>(), dto.getName(), date1, status1));
 
-        return new ResponseEntity<>("",HttpStatus.OK);
+        return new ResponseEntity<>("", HttpStatus.OK);
     }
 
     @PutMapping("/add_expense/{id}")
     public ResponseEntity addExpense(
             @RequestBody ExpenseBorrowedDto dto,
             @PathVariable String id
-            ){
+    ) {
         var user = SecurityContextHolder.getContext().getAuthentication().getName();
         ExpenseBorrowed expenseBorrowed = expenseBorrowedService.addExpense(user, dto.getDescription(),
                 dto.getTotal(), dto.getCategory(),
@@ -85,23 +85,23 @@ public class EventController {
         event.getListOfExpenses().add(expenseBorrowed);
         eventService.update(event);
         expenseBorrowedService.delete(expenseBorrowed.getId());
-        return new ResponseEntity<>("",HttpStatus.OK);
+        return new ResponseEntity<>("", HttpStatus.OK);
     }
+
     @DeleteMapping("/{eventId}/expense/{expenseId}")
     public ResponseEntity deleteExpenseFromEvent(
             @PathVariable String eventId,
             @PathVariable String expenseId
-    ){
+    ) {
         Event event = eventService.getById(eventId);
 //        event.getListOfExpenses().removeIf(e->e.getId()==null);
-        event.getListOfExpenses().removeIf(expense->expense.getId().equals(expenseId));
+        event.getListOfExpenses().removeIf(expense -> expense.getId().equals(expenseId));
         eventService.update(event);
-        return new ResponseEntity<>("",HttpStatus.OK);
+        return new ResponseEntity<>("", HttpStatus.OK);
     }
 
     @PutMapping("/close/{id}")
-    public ResponseEntity closeEvent(@PathVariable String id)
-    {
+    public ResponseEntity closeEvent(@PathVariable String id) {
         Event event = eventService.getById(id);
         var users = event.getListOfUsers();
         var listOfExpenses = event.getListOfExpenses();
@@ -109,17 +109,20 @@ public class EventController {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         Date date = new Date(Instant.now().toEpochMilli());
         var currentDate = dateFormat.format(date);
-        for (ExpenseBorrowed exp: listOfExpenses
+        for (ExpenseBorrowed exp : listOfExpenses
         ) {
             var total = exp.getTotal();
             var perUser = total / numberOfUsers;
             var userExp = exp.getUser();
-            for (User user: users
+            for (User user : users
             ) {
+                if (user.getEmail().equals(userExp)) {
+                    continue;
+                }
                 expenseBorrowedService.addBorrowed(userExp, "", perUser, null, currentDate, user.getEmail(), null);
             }
         }
-        event.setStatus(Status.closed);
+        event.setStatus(Status.CLOSED);
         eventService.update(event);
         return new ResponseEntity<>("", HttpStatus.OK);
     }

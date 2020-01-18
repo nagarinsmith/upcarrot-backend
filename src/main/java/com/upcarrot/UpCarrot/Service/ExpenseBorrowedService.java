@@ -6,16 +6,9 @@ import com.upcarrot.UpCarrot.Model.ExpenseCategory;
 import com.upcarrot.UpCarrot.Model.Status;
 import com.upcarrot.UpCarrot.Repository.BaseRepository;
 import com.upcarrot.UpCarrot.Repository.ExpenseBorrowedRepository;
-import jdk.jfr.Category;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
@@ -52,8 +45,8 @@ public class ExpenseBorrowedService extends BaseService {
     }
 
     public void addBorrowed(String user, @Nullable String description, Double total, ExpenseCategory category, String date, @Nullable String otherParticipant, Status status) {
-        addExpense(user, description, total, ExpenseCategory.BORROWED, date, otherParticipant, Status.open);
-        addExpense(otherParticipant, description, total, ExpenseCategory.OWED, date, user, Status.open);
+        addExpense(user, description, total, ExpenseCategory.BORROWED, date, otherParticipant, Status.PENDING);
+        addExpense(otherParticipant, description, total, ExpenseCategory.OWED, date, user, Status.OPEN);
     }
 
     public void closeBorrowed(String id) {
@@ -61,8 +54,8 @@ public class ExpenseBorrowedService extends BaseService {
         ExpenseBorrowed expenseBorrowed1 =
                 repository.getFirstByUserAndDateAndTotal
                         (expenseBorrowed.getOtherParticipant(), expenseBorrowed.getDate(), expenseBorrowed.getTotal());
-        expenseBorrowed.setStatus(Status.closed);
-        expenseBorrowed1.setStatus(Status.closed);
+        expenseBorrowed.setStatus(Status.CLOSED);
+        expenseBorrowed1.setStatus(Status.CLOSED);
         repository.save(expenseBorrowed);
         repository.save(expenseBorrowed1);
     }
