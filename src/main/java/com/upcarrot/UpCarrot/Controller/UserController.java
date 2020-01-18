@@ -1,10 +1,12 @@
 package com.upcarrot.UpCarrot.Controller;
 
+import com.upcarrot.UpCarrot.Dto.UserDto;
 import com.upcarrot.UpCarrot.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,10 +18,9 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity register(
-            @RequestParam String email,
-            @RequestParam String password
+            @RequestBody UserDto user
     ) {
-        userService.register(email, password);
+        userService.register(user.getUsername(), user.getPassword());
         return new ResponseEntity<>("Welcome!", HttpStatus.OK);
     }
 }
